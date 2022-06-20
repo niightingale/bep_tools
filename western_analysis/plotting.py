@@ -58,3 +58,43 @@ plt.ylim([0, 2.25])
 
 plt.show()
 # %%
+c4_enrich = np.array([1.11, 2.38, 1.49])
+wt_enrich = np.array([2.26, 6.72, 2.36])
+hp_enrich = np.array([1.34, 1.42])
+h_enrich = np.array([1.18, 1.59])
+
+std_c4_e, avg_c4_e = np.std(c4_enrich), np.mean(c4_enrich)
+std_wt_e, avg_wt_e = np.std(wt_enrich), np.mean(wt_enrich)
+std_hp_e, avg_hp_e = np.std(hp_enrich), np.mean(hp_enrich)
+std_h_e, avg_h_e = np.std(h_enrich), np.mean(h_enrich)
+# %%
+fig = plt.figure()
+fig.set_size_inches([2,2])
+fig.set_dpi(200)
+ax = fig.add_axes([0,0,1,1])
+fields = ['C4', 'WT', 'HP', 'H']
+
+means = [avg_c4_e, avg_wt_e, avg_hp_e, avg_h_e]
+errors = [std_c4_e, std_wt_e, std_hp_e, std_h_e]
+ax.bar(fields, means, yerr = errors, width = 0.8, capsize = 5, fill = False, hatch = '///')
+ax.set_title('Relative Enrichment of PCNA after o/n incubation with R1881 (n=3)*')
+ax.set_ylabel('Enrichment')
+ax.yaxis.grid(True, alpha = 0.35)
+plt.show()
+
+ # %%
+means = [1.05, 4.65]
+titles = ['C4', 'WT']
+
+fig = plt.figure()
+fig.set_size_inches([2,2])
+fig.set_dpi(200)
+
+ax = fig.add_axes([0,0,1,1])
+
+ax.bar(titles, means, fill = False, hatch = 'oo')
+ax.set_title('Relative Enrichment of AR after o/n incubation with R1881 (n=1)**', loc = 'center', wrap = True)
+ax.set_ylabel('Enrichment')
+ax.yaxis.grid(True, alpha = 0.35)
+plt.show()
+# %%
