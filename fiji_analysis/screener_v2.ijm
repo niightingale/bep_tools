@@ -101,24 +101,81 @@ function save(arr, to){
 	}
 }
 
+function loadTxt(path){
+	text = File.openAsString(path);
+	
+	arr = newArray(1);
+	
+	in_file = true;
+	counter = 0;
+	pos = 0;
+	
+	// Extract Lines
+	while(in_file){
+		end = indexOf(text, "\n", pos + 1);
+		// Stopper
+		if(end >= text.lastIndexOf("\n")){
+			in_file = false;
+		}
+		current_line = text.substring(pos, end);
+		current_line.replace("\\", "/");
+		print(current_line);
+		arr[counter] = current_line;
+		counter++;
+		pos = end + 1;
+	}
+	arr[arr.length] = counter;	// Put count at end of array
+	return arr;
+}
+
+
 spotkeep = newArray(nResults);
 
 // INTRO
 Dialog.create("Screener");
 Dialog.addMessage("Setup", 14, "blue");
+path_linker = Dialog.addDirectory("Linker", "")
+Dialog.addMessage("A linker file automatically imports the paths that have to be specified below.");
 path_df = Dialog.addDirectory("Dataframe", "C:/Users/Student/Documents/bep_toolset/bep_tools/fiji_analysis/data/0206_assay/input_data/objects_coloc_wt_plus_GJK.txt");
 path_images = Dialog.addDirectory("Images", "Y:/PATH-Pathologie/220602 ar jfx646 pcna mscarlet PACE MvR/export_images/220602 ar jfx646 pcna mscarlet PACE MvR__2022-06-02T16_55_19-Measurement 1/Images/");
 path_output = Dialog.addDirectory("Output", "C:/Users/Student/Documents/bep_toolset/bep_tools/fiji_analysis/data/0206_assay/output_data/0206_assay_coloc_wt_plus_rois/");
 Dialog.addMessage("Directory of the folder that holds the images corresponding to the dataframe.");
 Dialog.show();
 
+path_linker = Dialog.getString();
 path_df = Dialog.getString();
 img_path = Dialog.getString();
 path_output = Dialog.getString();
 
+start_position = 0;
+
+// PRE | Use Linker
+if (path_linker != ""){
+	arr = loadTxt(path_linker);
+	
+	// Put in paths
+	path_df = arr[0];
+	img_path = arr[1];
+	path_output = arr[2];
+}
+
+// PRE | Start Where We Left
+if (File.exists(path_output + "cep.txt")){
+	// Get ANNOTATION LIST (for annotations array & starting pos)
+	arr = loadTxt(path_output + "cep.txt");
+	
+	start_position = arr[arr.length - 1];
+	spotkeep = Array.slice(arr, 0, arr.length - 1);
+}
+
 run("Results... ","open=" + path_df);
 
 for (i = 0; i < nResults; i++){
+	// Start Where We Left
+	if (i == 0 && start_position != 0){
+		i = start_position;
+	}
+	
 	// 1) Obtain Locus Data
 	view_id = getView(i);			// Get view data for image lookup
 	view_bb = getBoundingBox(i);	// Get bounding box data for bounding
@@ -127,6 +184,7 @@ for (i = 0; i < nResults; i++){
 	img_channel_1 = fetchImageNames(view_id, 1);
 	img_channel_2 = fetchImageNames(view_id, 2);
 	
+
 	open(img_path + img_channel_1);
 	open(img_path + img_channel_2);
 	
@@ -168,8 +226,6 @@ for (i = 0; i < nResults; i++){
 	test = Dialog.getCheckbox();
 	choice = Dialog.getChoice();
 	
-	spotkeep[i] = test;		// Put in spotkeep
-	
 	// go back once
 	if (choice == "go back"){
 		i = i - 2;
@@ -180,6 +236,9 @@ for (i = 0; i < nResults; i++){
 		exit();
 	}
 	if (choice == "continue"){
+		// Store in Spotkeep
+		spotkeep[i] = test;	
+		// Store as tiff
 		saveAs("Tiff", path_output 
 		+ "r" + view_id[0] + "c" + view_id[1] + "p" + view_id[2]
 		+ "f" + view_id[4] + "t" + view_id[3] + "cl" + test);
