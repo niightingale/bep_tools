@@ -128,7 +128,6 @@ function loadTxt(path){
 	return arr;
 }
 
-
 spotkeep = newArray(nResults);
 
 // INTRO
