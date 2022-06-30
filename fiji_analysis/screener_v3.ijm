@@ -9,11 +9,11 @@ function getView(row){
 	arr = newArray(5);
 	
 	// Yield values for row selected
-	r = getResult("Row", i);
-	c = getResult("Column", i);
-	p = getResult("Plane", i);
-	t = getResult("Timepoint", i);
-	f = getResult("Field", i);	
+	r = getResult("Row", row);
+	c = getResult("Column", row);
+	p = getResult("Plane", row);
+	t = getResult("Timepoint", row);
+	f = getResult("Field", row);	
 	
 	arr[0] = r; 
 	arr[1] = c;
@@ -97,7 +97,7 @@ function save(arr, to){
 	f = File.open(to);
 	
 	for (i = 0; i < arr.length; i++){
-		//print(f, arr[i] + "\n");
+		print(f, arr[i] + "\n");
 	}
 }
 
@@ -180,17 +180,7 @@ function _linearAssay(start_position, path_df, path_img, path_out, spotkeep){
 		close("Composite");
 		selectWindow("Merge");
 		
-		Stack.setChannel(1);
-		
-		if (true){
-			getStatistics(area, mean, min, max, std, histogram);
-			print("MHD: " + max);
-		}
-		
-		else{
-		getStatistics(area, mean, min, max, std, histogram);
-		print("MHD: ", max);
-		
+		// 5) Inquire User
 		Dialog.createNonBlocking("Spotter");
 		Dialog.addMessage("At " + i + " of " + nResults);
 		Dialog.addMessage("Is there a spot?", false);
@@ -225,9 +215,7 @@ function _linearAssay(start_position, path_df, path_img, path_out, spotkeep){
 			saveAs("Tiff", path_output 
 			+ "r" + view_id[0] + "c" + view_id[1] + "p" + view_id[2]
 			+ "f" + view_id[4] + "t" + view_id[3] + "cl" + test);
-			}	
-		}
-		
+		}	
 
 		close("*");
 	}
@@ -242,10 +230,10 @@ function _randomAssay(len, path_df, path_img, path_out, spotkeep){
 	len_df = df[df.length - 1] - 1;
 	print("LENGTH OF DF: ", len_df);
 	arr_random = randomArr(len);
-	arr_random = newArray(0,1,2);
 	
 	// Create annotation array
 	arr_anno = newArray(len_df);
+	Array.fill(arr_anno, 3);
 	
 	// Review All
 	for (i = 0; i < arr_random.length; i++){
@@ -279,57 +267,49 @@ function _randomAssay(len, path_df, path_img, path_out, spotkeep){
 		selectWindow("Merge");
 		boundingSetter(new_bb, 25);	
 		
-		
-		
 		close("Composite");
 		selectWindow("Merge");
 		
 		getStatistics(area, mean, min, max, std, histogram);
 		
 		Stack.setChannel(1);
-		if (false){
-			print("MHD: " + max + " | " + "NUMBER: " + arr_random[i]);
-			close("*");
+			
+		Dialog.createNonBlocking("Spotter Random");
+		Dialog.addMessage("At " + i + " of " + len); 
+		Dialog.addMessage("Dataframe index: " + arr_random[i]);
+		Dialog.addMessage("Is there a spot?", false);
+		Dialog.addCheckbox("Is there a spot?", false);
+		
+		
+		Dialog.addMessage("Other Options");
+		options = newArray("continue", "go back", "terminate");
+		Dialog.addChoice("Options", options);
+		
+		
+		Dialog.show();
+		
+		test = Dialog.getCheckbox();
+		choice = Dialog.getChoice();
+		
+		// go back once
+		if (choice == "go back"){
+			i = i - 2;
 		}
-		else{			
-			Dialog.createNonBlocking("Spotter Random");
-			Dialog.addMessage("At " + i + " of " + len); 
-			Dialog.addMessage("Dataframe index: " + arr_random[i]);
-			Dialog.addMessage("Is there a spot?", false);
-			Dialog.addCheckbox("Is there a spot?", false);
-			
-			
-			Dialog.addMessage("Other Options");
-			options = newArray("continue", "go back", "terminate");
-			Dialog.addChoice("Options", options);
-			
-			
-			Dialog.show();
-			
-			test = Dialog.getCheckbox();
-			choice = Dialog.getChoice();
-			
-			// go back once
-			if (choice == "go back"){
-				i = i - 2;
-			}
-			// terminate assay (+saving)
-			if (choice == "terminate"){
-				save(arr_anno, path_output + "/" + random_save);
-				exit();
-			}
-			if (choice == "continue"){
-				// Store in Spotkeep
-				arr_anno[arr_random[i]] = test;	
-				// Store as tiff
-				saveAs("Tiff", path_output 
-				+ "r" + view_id[0] + "c" + view_id[1] + "p" + view_id[2]
-				+ "f" + view_id[4] + "t" + view_id[3] + "cl" + test);
-			}
-			
-			close("*");
-				
+		// terminate assay (+saving)
+		if (choice == "terminate"){
+			save(arr_anno, path_output + "/" + random_save);
+			exit();
 		}
+		if (choice == "continue"){
+			// Store in Spotkeep
+			arr_anno[arr_random[i]] = test;	
+			// Store as tiff
+			saveAs("Tiff", path_output 
+			+ "r" + view_id[0] + "c" + view_id[1] + "p" + view_id[2]
+			+ "f" + view_id[4] + "t" + view_id[3] + "cl" + test);
+		}
+		
+		close("*");
 	}
 	save(arr_anno, path_output + "/" + random_save);
 }
