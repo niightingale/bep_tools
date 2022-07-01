@@ -128,13 +128,34 @@ function loadTxt(path){
 	return arr;
 }
 
-function randomArr(n){
+function randomArr(n, upper_limit){
 	// Retrieve an array of 'n' random numbers
 	arr = newArray(n);
 	
-	for (i = 0; i<n; i++){
-		arr[i] = round(random() * n);
+	
+	for (i = 0; i < n; i++){
+		duplicate = true;
+		
+		while(duplicate){
+			rn = round(random() * upper_limit);
+			found = false;
+			for (j = 0; j < n; j++){
+				// Check if found
+				if (arr[j] == rn){
+					found = true;
+				}
+			}
+			if (found == false){
+				arr[i] = rn;
+				duplicate = false;
+			}
+		}
+		
+		if (duplicate == false){
+			// arr[i] = round(random() * n);
+		}
 	}
+	Array.print(arr);
 	return arr;
 }
 
@@ -182,7 +203,7 @@ function _linearAssay(start_position, path_df, path_img, path_out, spotkeep){
 		
 		// 5) Inquire User
 		Dialog.createNonBlocking("Spotter");
-		Dialog.addMessage("At " + i + " of " + nResults);
+		Dialog.addMessage("At " + (i + 1) + " of " + nResults);
 		Dialog.addMessage("Is there a spot?", false);
 		Dialog.addCheckbox("Is there a spot?", false);
 		
@@ -229,7 +250,7 @@ function _randomAssay(len, path_df, path_img, path_out, spotkeep){
 	df = loadTxt(path_df);
 	len_df = df[df.length - 1] - 1;
 	print("LENGTH OF DF: ", len_df);
-	arr_random = randomArr(len);
+	arr_random = randomArr(len, len_df - 1);
 	
 	// Create annotation array
 	arr_anno = newArray(len_df);
@@ -275,7 +296,7 @@ function _randomAssay(len, path_df, path_img, path_out, spotkeep){
 		Stack.setChannel(1);
 			
 		Dialog.createNonBlocking("Spotter Random");
-		Dialog.addMessage("At " + i + " of " + len); 
+		Dialog.addMessage("At " + (i + 1) + " of " + len); 
 		Dialog.addMessage("Dataframe index: " + arr_random[i]);
 		Dialog.addMessage("Is there a spot?", false);
 		Dialog.addCheckbox("Is there a spot?", false);
