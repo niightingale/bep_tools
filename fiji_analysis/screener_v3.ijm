@@ -46,6 +46,8 @@ function getBoundingBox(row){
 
 function fetchImageNames(view_id, channel){
 	// For fetching the image name from the view_id array
+	img_title = "";
+	
 	img_title = 
 	"r" + String.pad(view_id[0], 2) + 
 	"c" + String.pad(view_id[1], 2) +
@@ -53,8 +55,59 @@ function fetchImageNames(view_id, channel){
 	"p" + String.pad(view_id[2], 2) +
 	"-ch" + channel + "sk" + String.pad(view_id[3], 2) +
 	"fk1fl1.tiff"; 
-	
+		
 	return img_title;
+}
+
+function fetchShotG(view_id, channel, stack_depth){
+	img_title = "";
+	
+	img_title = 
+	"r" + String.pad(view_id[0], 2) + 
+	"c" + String.pad(view_id[1], 2) +
+	"f" + String.pad(view_id[4], 2) + 
+	"p" + String.pad(round(stack_depth/2), 2) +
+	"-ch" + channel + "sk" + String.pad(view_id[3] + 1, 1) +
+	"fk1fl1.tiff"; 
+		
+	return img_title;
+
+}
+
+function fetchImageStacks(view_id, img_path, channel, stack_depth){
+	// Fetch Titles
+	titles_to_load = newArray(10);
+	
+	for (i = 0; i<stack_depth; i++){
+		title = 
+		"r" + String.pad(view_id[0], 2) +
+		"c" + String.pad(view_id[1], 2) +
+		"f" + String.pad(view_id[4], 2) +
+		"p" + String.pad(i+1, 2) +
+		"-ch" + channel + "sk" + String.pad(view_id[3], 1) +
+		"fk1fl1.tiff"; 	
+		titles_to_load[i] = title;	// Store title
+	}
+	
+	// Open and Stack images
+	for (j = 0; j<stack_depth; j++){
+		open(img_path + titles_to_load[j]);
+	}
+	run("Images to Stack", "name=ch1 use");					// Obtain Stack
+	run("Z Project...", "projection=[Max Intensity]");		// Max intensity projection
+	close("ch1");											// Close stack
+	saveAs("Tiff", "C:/Users/Student/Desktop/MAX_ch" + channel + ".tif");
+	close("MAX_ch" + channel + ".tif");
+//	str_filter ="(" + 
+//				"r" + String.pad(view_id[0], 2) +
+//				"c" + String.pad(view_id[1], 2) +
+//				"f" + String.pad(view_id[4], 2) +
+//				"p0"+ "[1" + "-"  + stack_depth  + "]" + 
+//				"-ch" + channel + "sk" + String.pad(view_id[3], 1) +
+//				")"; 	
+//	print(str_filter);
+//	File.openSequence(img_path, " filter=" + str_filter);
+//	run("Z Project...", "projection=[Max Intensity]");
 }
 
 function boundingSetter(view_bb, flood){	
@@ -159,7 +212,7 @@ function randomArr(n, upper_limit){
 	return arr;
 }
 
-function _linearAssay(start_position, path_df, path_img, path_out, spotkeep){
+function _linearAssay(start_position, path_df, path_img, path_out, spotkeep, stack_depth){
 	// LINEAR ASSAY: Go across all items in the dataframe one by one.
 	for (i = 0; i < nResults; i++){
 		// Start Where We Left
@@ -171,13 +224,30 @@ function _linearAssay(start_position, path_df, path_img, path_out, spotkeep){
 		view_id = getView(i);			// Get view data for image lookup
 		view_bb = getBoundingBox(i);	// Get bounding box data for bounding
 		
-		// 2) Fetch Image Names
-		img_channel_1 = fetchImageNames(view_id, 1);
-		img_channel_2 = fetchImageNames(view_id, 2);
-		
-	
-		open(img_path + img_channel_1);
-		open(img_path + img_channel_2);
+		// 2) Fetch Image (Names)
+		if (stack_depth == 0){
+			img_channel_1 = fetchImageNames(view_id, 1);
+			img_channel_2 = fetchImageNames(view_id, 2);
+
+			open(img_path + img_channel_1);
+			open(img_path + img_channel_2);
+		}
+		else{
+			img_channel_1 = fetchShotG(view_id, 1, stack_depth);
+			img_channel_2 = fetchShotG(view_id, 2, stack_depth);
+
+			open(img_path + img_channel_1);
+			open(img_path + img_channel_2);
+			
+//			fetchImageStacks(view_id, img_path, 1, stack_depth);
+//			fetchImageStacks(view_id, img_path, 2, stack_depth);
+//			
+//			open("C:/Users/Student/Desktop/MAX_ch1.tif");
+//			img_channel_1 = "MAX_ch1.tif";
+//			open("C:/Users/Student/Desktop/MAX_ch2.tif");	
+//			img_channel_2 = "MAX_ch2.tif";
+		}
+
 		
 		// 3) Process Images Into Composite
 		run("Merge Channels...", "c1=" + img_channel_1 + " c2=" + img_channel_2 + " create");
@@ -356,6 +426,8 @@ Dialog.addChoice("Analysis Mode", options);
 Dialog.addToSameRow();
 Dialog.addSlider("Samples", 25, 200, 50);
 Dialog.addMessage("While storing the labeled list works for both analysis modes, loading only works for the linear mode.");
+Dialog.addSlider("Stack Depth", 0, 15, 0);
+Dialog.addMessage("This value is used in 'maximum projection' assays. It MUST be left on 0 when we are not working on such data.");
 
 Dialog.show();
 
@@ -366,6 +438,7 @@ path_output = Dialog.getString();
 
 choice_made = Dialog.getChoice();
 random_length = Dialog.getNumber();
+stack_depth = Dialog.getNumber();
 
 start_position = 0;
 
@@ -391,7 +464,7 @@ if (File.exists(path_output + linear_save) && choice_made == "linear"){
 run("Results... ","open=" + path_df);
 
 if (choice_made == "linear"){
-	spotkeep = _linearAssay(start_position, path_df, img_path, path_output, spotkeep);	
+	spotkeep = _linearAssay(start_position, path_df, img_path, path_output, spotkeep, stack_depth);	
 }
 if (choice_made == "random"){
 	_randomAssay(random_length, path_df, img_path, path_output, spotkeep);
