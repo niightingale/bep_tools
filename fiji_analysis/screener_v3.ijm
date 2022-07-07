@@ -233,19 +233,19 @@ function _linearAssay(start_position, path_df, path_img, path_out, spotkeep, sta
 			open(img_path + img_channel_2);
 		}
 		else{
-			img_channel_1 = fetchShotG(view_id, 1, stack_depth);
-			img_channel_2 = fetchShotG(view_id, 2, stack_depth);
-
-			open(img_path + img_channel_1);
-			open(img_path + img_channel_2);
+//			img_channel_1 = fetchShotG(view_id, 1, stack_depth);
+//			img_channel_2 = fetchShotG(view_id, 2, stack_depth);
+//
+//			open(img_path + img_channel_1);
+//			open(img_path + img_channel_2);
 			
-//			fetchImageStacks(view_id, img_path, 1, stack_depth);
-//			fetchImageStacks(view_id, img_path, 2, stack_depth);
-//			
-//			open("C:/Users/Student/Desktop/MAX_ch1.tif");
-//			img_channel_1 = "MAX_ch1.tif";
-//			open("C:/Users/Student/Desktop/MAX_ch2.tif");	
-//			img_channel_2 = "MAX_ch2.tif";
+			fetchImageStacks(view_id, img_path, 1, stack_depth);
+			fetchImageStacks(view_id, img_path, 2, stack_depth);
+			
+			open("C:/Users/Student/Desktop/MAX_ch1.tif");
+			img_channel_1 = "MAX_ch1.tif";
+			open("C:/Users/Student/Desktop/MAX_ch2.tif");	
+			img_channel_2 = "MAX_ch2.tif";
 		}
 
 		
@@ -321,6 +321,8 @@ function _randomAssay(len, path_df, path_img, path_out, spotkeep){
 	len_df = df[df.length - 1] - 1;
 	print("LENGTH OF DF: ", len_df);
 	arr_random = randomArr(len, len_df - 1);
+	
+	arr_random = newArray(138, 137);
 	
 	// Create annotation array
 	arr_anno = newArray(len_df);
