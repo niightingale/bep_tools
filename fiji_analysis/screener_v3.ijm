@@ -18,7 +18,7 @@ function getView(row){
 	arr[0] = r; 
 	arr[1] = c;
 	arr[2] = p;
-	arr[3] = t;
+	arr[3] = t + 1;
 	arr[4] = f;
 	
 	return arr;
@@ -53,7 +53,7 @@ function fetchImageNames(view_id, channel){
 	"c" + String.pad(view_id[1], 2) +
 	"f" + String.pad(view_id[4], 2) + 
 	"p" + String.pad(view_id[2], 2) +
-	"-ch" + channel + "sk" + String.pad(view_id[3], 2) +
+	"-ch" + channel + "sk" + String.pad(view_id[3], 1) +
 	"fk1fl1.tiff"; 
 		
 	return img_title;
@@ -322,8 +322,7 @@ function _randomAssay(len, path_df, path_img, path_out, spotkeep){
 	print("LENGTH OF DF: ", len_df);
 	arr_random = randomArr(len, len_df - 1);
 	
-	arr_random = newArray(138, 137);
-	
+	// arr_random = newArray(20, 22, 30, 31, 32, 34, 41, 42, 45, 46, 48, 49, 50, 51, 56, 57, 60, 61, 62);
 	// Create annotation array
 	arr_anno = newArray(len_df);
 	Array.fill(arr_anno, 3);
