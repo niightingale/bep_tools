@@ -1,3 +1,4 @@
+close("Results");
 Roi.getBounds(rx, ry, width, height); 
 row = 0; 
 
