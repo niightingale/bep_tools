@@ -1,3 +1,3 @@
 C:\Users\Student\Documents\bep_toolset\bep_tools\fiji_analysis\data\0206_assay_3X2\output_data\0206_4_6_view_080722_3X_2.csv
-Y:\PATH-Pathologie\220602 ar jfx646 pcna mscarlet PACE MvR\export_images\220602 ar jfx646 pcna mscarlet PACE MvR__2022-06-02T16_55_19-Measurement 1\Images\
+Y:\PATH-Pathologie\220602 ar jfx646 pcna mscarlet PACE MvR\220602 ar jfx646 pcna mscarlet PACE MvR__2022-06-02T16_55_19-Measurement 1\images\220602 ar jfx646 pcna mscarlet PACE MvR__2022-06-02T16_55_19-Measurement 1\Images\
 C:\Users\Student\OneDrive - Delft University of Technology\BEP\_analysis_output\3X_2\pre\0206_4_6\
