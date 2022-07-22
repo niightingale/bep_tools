@@ -25,16 +25,28 @@ The designed use of this notebook is as follows:
 Note that along this process the script will output multiple `.csv`-files.
 
 ### ✍️ How to Use
+#### Input
 To do an *analysis* on a spot dataset, we use the `do_analysis()` function. Most of its parameters are straightforward (and explained in the docstrings), however some require more explanation:
 - **Cuts:** This parameters expects a list of tuples, where each tuple describes the row and column of a well. These are the wells on which the analysis will be carried out.
 - **Thresholds:** Here the thresholds must be specified as a list with three values. The first threshold is the maximum distance in space a spot may have between its datapoints, the second threshold is that maximum distance in time and the third refers to the minimum amount of datapoints that a spot is required to have to consider it a true spot.
 
+#### Saved Output
 This function will output four `.csv`-files for each well specified under the `cuts` parameter. These are all stored from [Pandas](https://pandas.pydata.org/) dataframes:
 - date_row_column_*full*: Just the well specified in row_column separated from the rest of the dataset.
 - date_row_column_*view*_modelidentifier: The previous file but run through the model that is named as 'modelidentifier'. Row `predicted_clc` is added to store whether the model predicted the datapoint as a true spot or not.
 - date_row_column_*view_anno*_modelidentifier: The previous file but with the spots traced through time, space and nuclei. Rows `cluster_id`, `cluster_size` and `nucleus_id` are added. Cluster refers to the set of spots found in different images which are one and the same spot, the `nucleus_id` is a unique identifier of a nucleus through time and space (z-stack).
 - date_row_column_*view_anno_th*_modelidentifier: The previous file but with the third threshold applied. This means that all unique clusters under a certain `cluster_size` are removed from the previous set to create this one.
 
+#### Function Return
+The `do_analysis()` function has two returns (i) `cut_results` and (ii) `nuc_vals`. These are both Pandas dataframes.
+
+##### `cut_results`
+Determines four measures; (i) nuclei with colocalization, (ii) nuclei total, (iii) nuclei total late-s and (iv) nuclei ratio (ratio between (i) and (iii), all determined for each timepoint.
+
+This can be used to determine the distribution of nuclei with spots across time.
+
+##### `nuc_vals`
+Determines two measures; (i) the amount of nuclei with a spot and (ii) the amount of late-s nuclei (avg. across time), all separated for each well used in the analysis.
 
 ### 💽 Data
 For each session of imaging, the (i) Harmony data used together with (ii) the classifier output data is stored in one folder. 
