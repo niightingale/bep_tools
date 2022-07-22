@@ -13,7 +13,7 @@ Keep in mind that an understanding of how the modeling suite within [SciPy](http
 Most of the core functionality within this repository can be accessed via Jupyter notebooks. These can be opened using [Jupyter Notebook or Jupyter Lab](https://jupyter.org/). During the project [VS Code](https://code.visualstudio.com/) was exclusively used, which implies that correct functionality can only be guaranteed using that editor together with the usual Jupyter extensions ([Jupyter](https://marketplace.visualstudio.com/items?itemName=ms-toolsai.jupyter), [Jupyter Keymap](https://marketplace.visualstudio.com/items?itemName=ms-toolsai.jupyter-keymap) and [Jupyter Notebook Renderers](https://marketplace.visualstudio.com/items?itemName=ms-toolsai.jupyter-renderers))
 
 ### 📁 Folder Structure
-  - fiji_analysis
+  - [fiji_analysis](https://github.com/niightingale/bep_tools/blob/main/fiji_analysis/README.md)
   - general_data_analysis
   - opera_analysis
   - western_analysis
