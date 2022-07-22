@@ -4,7 +4,7 @@ This folder carries the Jupyter notebooks with the random forest classifier, the
 ## 📁 Folder Structure
 - `models_X3.ipynb` and other versions
 - `screener_v3.ijm` and other versions
-- [data](https://github.com/niightingale/bep_tools/edit/main/fiji_analysis/README.md#-data)
+- [data](https://github.com/niightingale/bep_tools/tree/main/fiji_analysis#-data)
 
 ## 🎛 `model_X3.ipynb`
 This Jupyter notebook holds all the functionality required to use a model to predict which spickles are *true* based on five of their properties:
