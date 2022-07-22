@@ -46,7 +46,7 @@ Determines four measures; (i) nuclei with colocalization, (ii) nuclei total, (ii
 This can be used to determine the distribution of nuclei with spots across time.
 
 ##### `nuc_vals`
-Determines two measures; (i) the amount of nuclei with a spot and (ii) the amount of late-s nuclei (avg. across time), all separated for each well used in the analysis.
+Determines two measures; (i) the amount of nuclei with a spot (`nuc_w_spot`) and (ii) the amount of late-s nuclei (`nuc_sel`), all separated for each well used in the analysis.
 
 ### 💽 Data
 For each session of imaging, the (i) Harmony data used together with (ii) the classifier output data is stored in one folder. 
