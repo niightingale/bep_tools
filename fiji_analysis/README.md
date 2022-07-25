@@ -48,7 +48,33 @@ This can be used to determine the distribution of nuclei with spots across time.
 ##### `nuc_vals`
 Determines two measures; (i) the amount of nuclei with a spot (`nuc_w_spot`) and (ii) the amount of late-s nuclei (`nuc_sel`), all separated for each well used in the analysis. The ratio between these two measures is the *spickle ratio*.
 
-### 💽 Data
+## 🖥 `screener_v3.ijm`
+This macro is used to do yes-no assays on the foci in the dataframes that are the **saved output** of the `do_analysis()` function of `model_X3.ipynb`. However, its functionality is not limited to this, each stored dataframe that has the correct columns may work.
+
+### ✍️ How to Use
+<p align="center"><img width=85% src="https://user-images.githubusercontent.com/65312137/180715223-59752ef3-5180-444a-8c3a-55ba1cfcffd2.png"></p>
+
+> **Figure 1:** Screenshot of the user interface of the macro
+
+For ease of use this macro sports a GUI. This GUI consists of three blocks:
+- **Manual Setup:** Requests the (i) dataframe (as `.txt` or `.csv`) that we want to review, where the corresponding (ii) images are stored and (iii) where the analysis output should be stored. Note that the folders should be specified with a forward slash at the end.
+- **Quick Setup:** Allows for the input of a *linker* file, which is essentially a `.txt` file with 3 lines, with each of the previously specified paths on one line.
+- **Analysis Mode:** We may choose to go through the foci from beginning to end (linear) or take a representative random sample (random). The *samples* slider only works when the random mode is selected. The *stack depth* is used in maximum projection assays; if it is put to a value any other than 0, the macro will try and fetch the whole z-stack corresponding to the spot.
+
+When the analysis is started, the user will be given an image and prompted to say whether the ROI in the image has a spot in its center or not. 
+
+After answering, the image will be stored to the *output* directory and the answer will be kept in a list to later be stored as a `.txt` file in which each line describes whether there was a spot or not. This `.txt` file will use three numbers, **0** for no spot, **1** for spot and **3** for unannotated entries in a random assay. It works like this to allow for the `.txt` file to be pasted back unto the used *dataframe* without hassle.
+
+#### 🛑 Known Problems
+- **Maximum Projection Assays [feature not final]:** 
+  - The maximum projections are generated in **real-time**. This makes usage of the macro very slow as the images are fetched linearly and then processed.
+  - If the maximum projections are calculated in advance and linked through the *Images* path, set *Stack Depth* to 0. 
+  - This feature may break under unknown conditions.
+- **Output Problems:**
+  - The macro is made to output all the used image cutouts with an annotated title, however sometimes the saving system misses. The accompanying `.txt` file which denotes the postives, negatives and non-useds is always complete.
+  
+
+## 💽 Data
 For each session of imaging, the (i) Harmony data used together with (ii) the classifier output data is stored in one folder. 
 
 These folders have a distinct naming convention of: `date of imaging` + assay + `identifier for type of assay`. They have two subfolders:
