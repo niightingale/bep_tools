@@ -14,8 +14,8 @@ Most of the core functionality within this repository can be accessed via Jupyte
 
 ### 📁 Folder Structure
   - [fiji_analysis](https://github.com/niightingale/bep_tools/blob/main/fiji_analysis/README.md)
-  - general_data_analysis
-  - opera_analysis
+  - general_data_analysis (deprecated)
+  - opera_analysis (deprecated)
   - [western_analysis](https://github.com/niightingale/bep_tools/tree/main/western_analysis/README.md)
   
 ## 📑 License
